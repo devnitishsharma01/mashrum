@@ -69,7 +69,7 @@ demo@mashrum.app / demo12345
 | Dashboard + reports | Done |
 | Working hours | Done |
 | Users / RBAC | Done |
-| Product image upload | Done |
+| Product image upload | Done (local + S3-compatible) |
 
 ## WhatsApp local testing
 

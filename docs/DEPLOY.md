@@ -112,9 +112,25 @@ curl http://localhost:4000/queue/status
 
 ## File uploads
 
-Product images are stored on local disk under `UPLOAD_DIR` and served at `/uploads/...`.
+Product images support two drivers:
 
-For multi-instance production, replace local disk with S3-compatible object storage and keep the same `imageUrl` field on products.
+| `STORAGE_DRIVER` | Behavior |
+|------------------|----------|
+| `local` (default) | Files saved under `UPLOAD_DIR`, served at `/uploads/...` |
+| `s3` | Uploaded to S3-compatible storage (`S3_*` env vars) |
+
+For multi-instance production, use `STORAGE_DRIVER=s3` (AWS S3, Cloudflare R2, MinIO, etc.).
+
+```bash
+STORAGE_DRIVER=s3
+S3_BUCKET=mashrum-uploads
+S3_REGION=ap-south-1
+S3_ACCESS_KEY_ID=...
+S3_SECRET_ACCESS_KEY=...
+# Optional:
+# S3_ENDPOINT=https://<account>.r2.cloudflarestorage.com
+# S3_PUBLIC_URL_BASE=https://cdn.example.com
+```
 
 ## Security notes for production
 

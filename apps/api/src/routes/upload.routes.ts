@@ -1,9 +1,9 @@
-import fs from "fs";
 import path from "path";
 import { Router } from "express";
 import multer from "multer";
 import { env } from "../config/env";
 import { AppError } from "../lib/errors";
+import { getStorageDriver, storeImage } from "../lib/storage";
 import {
   requireAuth,
   requirePermission,
@@ -17,45 +17,44 @@ const ALLOWED_MIME = new Set([
   "image/gif",
 ]);
 
-function ensureDir(dir: string) {
-  fs.mkdirSync(dir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: (req, _file, cb) => {
-    try {
-      const businessId = tenantId(req);
-      const dir = path.join(env.UPLOAD_DIR, businessId);
-      ensureDir(dir);
-      cb(null, dir);
-    } catch (error) {
-      cb(error as Error, env.UPLOAD_DIR);
-    }
-  },
-  filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase() || ".jpg";
-    const safeExt = [".jpg", ".jpeg", ".png", ".webp", ".gif"].includes(ext)
-      ? ext
-      : ".jpg";
-    cb(null, `${Date.now()}-${Math.random().toString(16).slice(2)}${safeExt}`);
-  },
-});
-
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: env.UPLOAD_MAX_BYTES },
   fileFilter: (_req, file, cb) => {
     if (!ALLOWED_MIME.has(file.mimetype)) {
-      cb(new AppError(400, "Only JPEG, PNG, WebP, or GIF images are allowed", "INVALID_FILE"));
+      cb(
+        new AppError(
+          400,
+          "Only JPEG, PNG, WebP, or GIF images are allowed",
+          "INVALID_FILE",
+        ),
+      );
       return;
     }
     cb(null, true);
   },
 });
 
+function buildFilename(originalName: string): string {
+  const ext = path.extname(originalName).toLowerCase() || ".jpg";
+  const safeExt = [".jpg", ".jpeg", ".png", ".webp", ".gif"].includes(ext)
+    ? ext
+    : ".jpg";
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}${safeExt}`;
+}
+
 export const uploadRouter = Router();
 
 uploadRouter.use(requireAuth);
+
+uploadRouter.get("/status", requirePermission("catalog:read"), (_req, res) => {
+  res.json({
+    data: {
+      driver: getStorageDriver(),
+      maxBytes: env.UPLOAD_MAX_BYTES,
+    },
+  });
+});
 
 uploadRouter.post(
   "/images",
@@ -88,13 +87,22 @@ uploadRouter.post(
       if (!req.file) {
         throw new AppError(400, "No file uploaded", "NO_FILE");
       }
+
       const businessId = tenantId(req);
-      const relativePath = `/uploads/${businessId}/${req.file.filename}`;
-      const url = `${env.API_URL}${relativePath}`;
+      const filename = buildFilename(req.file.originalname);
+      const stored = await storeImage({
+        businessId,
+        filename,
+        buffer: req.file.buffer,
+        mimeType: req.file.mimetype,
+      });
+
       res.status(201).json({
         data: {
-          url,
-          path: relativePath,
+          url: stored.url,
+          path: `/${stored.key}`,
+          key: stored.key,
+          driver: stored.driver,
           size: req.file.size,
           mimeType: req.file.mimetype,
         },

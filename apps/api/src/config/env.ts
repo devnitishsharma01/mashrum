@@ -29,6 +29,14 @@ const envSchema = z.object({
     .transform((v) => v === "true"),
   UPLOAD_DIR: z.string().default("uploads"),
   UPLOAD_MAX_BYTES: z.coerce.number().default(2 * 1024 * 1024),
+  STORAGE_DRIVER: z.enum(["local", "s3"]).default("local"),
+  S3_BUCKET: z.string().optional().default(""),
+  S3_REGION: z.string().optional().default("ap-south-1"),
+  S3_ACCESS_KEY_ID: z.string().optional().default(""),
+  S3_SECRET_ACCESS_KEY: z.string().optional().default(""),
+  S3_ENDPOINT: z.string().optional().default(""),
+  S3_PUBLIC_URL_BASE: z.string().optional().default(""),
+  S3_OBJECT_ACL: z.string().optional().default(""),
 });
 
 const parsed = envSchema.safeParse(process.env);
