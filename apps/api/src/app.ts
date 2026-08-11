@@ -17,6 +17,7 @@ import { healthRouter } from "./routes/health.routes";
 import { inventoryRouter } from "./routes/inventory.routes";
 import { orderRouter } from "./routes/order.routes";
 import { productRouter } from "./routes/product.routes";
+import { queueRouter } from "./routes/queue.routes";
 import { reportRouter } from "./routes/report.routes";
 import { uploadRouter } from "./routes/upload.routes";
 import { userRouter } from "./routes/user.routes";
@@ -65,6 +66,7 @@ export function createApp() {
   app.use("/uploads", express.static(uploadRoot, { maxAge: "7d" }));
 
   app.use(healthRouter);
+  app.use(queueRouter);
   app.use("/auth", authRouter);
   app.use("/business", businessRouter);
   app.use("/categories", categoryRouter);

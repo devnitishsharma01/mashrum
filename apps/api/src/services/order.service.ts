@@ -475,7 +475,7 @@ export async function transitionOrder(
     });
   });
 
-  enqueue("whatsapp.order_status", {
+  void enqueue("whatsapp.order_status", {
     businessId,
     orderId,
     orderNumber: existing.orderNumber,

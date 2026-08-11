@@ -29,6 +29,8 @@ ln -sf ../../.env packages/database/.env
 
 # Infra (optional if Postgres already running)
 docker compose up -d
+# Or local Redis for BullMQ (Homebrew module-safe helper):
+./scripts/redis-dev.sh
 
 # Build workspace packages + Prisma client
 pnpm setup

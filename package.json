@@ -19,6 +19,7 @@
     "db:push": "pnpm --filter @mashrum/database push",
     "db:seed": "pnpm --filter @mashrum/database seed",
     "db:studio": "pnpm --filter @mashrum/database studio",
-    "db:reset:dev": "pnpm --filter @mashrum/database exec prisma migrate reset --force"
+    "db:reset:dev": "pnpm --filter @mashrum/database exec prisma migrate reset --force",
+    "redis:dev": "./scripts/redis-dev.sh"
   }
 }

@@ -92,7 +92,23 @@ curl https://<api-host>/health
 docker compose up -d   # postgres + redis
 ```
 
-Redis is optional for the current in-process job queue. Keep Compose Redis for future BullMQ cutover.
+## Queue (BullMQ)
+
+- `QUEUE_DRIVER=auto` (default): use Redis when reachable, otherwise in-process memory
+- `QUEUE_DRIVER=redis`: require Redis (fail startup if unavailable)
+- `QUEUE_DRIVER=memory`: force in-process queue
+
+Local Redis helper (avoids broken Homebrew Redis module configs):
+
+```bash
+./scripts/redis-dev.sh
+```
+
+Check active driver:
+
+```bash
+curl http://localhost:4000/queue/status
+```
 
 ## File uploads
 

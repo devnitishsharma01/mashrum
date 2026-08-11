@@ -131,7 +131,7 @@ export async function ingestWhatsAppWebhook(
   }
 
   if (options?.enqueueJob !== false) {
-    enqueue("whatsapp.webhook", { providerEventId: eventId });
+    void enqueue("whatsapp.webhook", { providerEventId: eventId });
   }
   return { duplicate: false as const, providerEventId: eventId };
 }
