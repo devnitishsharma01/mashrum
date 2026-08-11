@@ -1,0 +1,16 @@
+node_modules
+dist
+.next
+.turbo
+coverage
+*.log
+.env
+.env.local
+.env.*.local
+packages/database/.env
+apps/web/.env.local
+.DS_Store
+uploads
+*.tsbuildinfo
+.prisma
+apps/api/tmp
