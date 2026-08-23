@@ -1,0 +1,31 @@
+"use strict";
+
+const APP_NAME = "Mushroom";
+
+const ORDER_STATUSES = [
+  "NEW",
+  "CONFIRMED",
+  "PROCESSING",
+  "READY",
+  "OUT_FOR_DELIVERY",
+  "DELIVERED",
+  "COMPLETED",
+  "CANCELLED",
+  "DELIVERY_FAILED",
+  "RETURNED",
+  "CUSTOMER_NOT_REACHABLE",
+];
+
+const PAYMENT_METHODS = ["COD"];
+
+const PAYMENT_STATUSES = ["PENDING", "COLLECTED", "FAILED", "CANCELLED"];
+
+const USER_ROLES = ["OWNER", "ADMIN", "STAFF"];
+
+module.exports = {
+  APP_NAME,
+  ORDER_STATUSES,
+  PAYMENT_METHODS,
+  PAYMENT_STATUSES,
+  USER_ROLES,
+};

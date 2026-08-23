@@ -1,101 +1,69 @@
-# Mashrum
+# Mushroom
 
-WhatsApp Ordering & Business Management SaaS (MVP).
+WhatsApp Ordering & Business Management (MVP).
 
-Businesses manage catalog/orders in the admin panel. Customers order on WhatsApp — no separate customer app.
+Customers order on WhatsApp. Businesses manage everything in the admin panel.
 
-## Stack
+## Tech stack
 
-- **Web:** Next.js 15 + Ant Design (`apps/web`)
-- **API:** Node.js + Express (`apps/api`)
-- **DB:** PostgreSQL + Prisma (`packages/database`)
-- **Shared:** Zod schemas, RBAC, order lifecycle (`packages/shared`)
-- **Monorepo:** pnpm workspaces
+| Layer | Tech |
+|-------|------|
+| Frontend | React, Vite, Ant Design, Axios, Redux |
+| Backend | Node.js, Express |
+| Database | MongoDB (Mongoose) |
+| Auth | JWT + bcrypt |
+| Storage | Local or AWS S3 |
 
-## Prerequisites
+```text
+frontend/  →  backend/  →  MongoDB
+```
 
-- Node.js 20+ (recommended 22; see `.nvmrc`)
-- pnpm 9+
-- PostgreSQL 14+
+## Folder structure
 
-## Quick start
+```text
+mushroom/
+├── frontend/          # React admin UI
+│   ├── .env.example   # VITE_API_URL
+│   └── src/
+├── backend/           # Express API
+│   ├── .env.example   # Mongo, JWT, S3, WhatsApp
+│   ├── scripts/       # seed
+│   └── src/
+├── docs/              # deploy notes
+├── package.json       # short scripts for both apps
+├── .nvmrc             # Node version
+└── .gitignore
+```
+
+## Setup
 
 ```bash
 nvm use
-pnpm install
 
-cp .env.example .env
-ln -sf ../../.env packages/database/.env
+# 1) Copy env files
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
 
-# Infra (optional if Postgres already running)
-docker compose up -d
-# Or local Redis for BullMQ (Homebrew module-safe helper):
-./scripts/redis-dev.sh
+# 2) Edit backend/.env (Mongo, secrets, S3 if needed)
 
-# Build workspace packages + Prisma client
-pnpm setup
+# 3) Install + seed
+npm run setup
+npm run db:seed
 
-# Apply schema (choose one)
-pnpm db:migrate:deploy   # preferred
-# pnpm db:push           # local shortcut
-
-# Optional demo tenant
-pnpm db:seed
-
-# Run API (:4000) + Web (:3000)
-pnpm --filter @mashrum/shared build
-pnpm dev
+# 4) Run (two terminals)
+npm run dev:api    # http://localhost:4000
+npm run dev:web    # http://localhost:3000
 ```
 
-- Web: http://localhost:3000
-- API health: http://localhost:4000/health
+Demo login: `demo@mushroom.app` / `demo12345`
 
-### Demo login (after seed)
+## Scripts
 
-```text
-demo@mashrum.app / demo12345
-```
+| Command | What it does |
+|---------|----------------|
+| `npm run setup` | Install backend + frontend deps |
+| `npm run db:seed` | Create demo business/user |
+| `npm run dev:api` | Start API |
+| `npm run dev:web` | Start UI |
 
-## MVP modules
-
-| Area | Status |
-|------|--------|
-| Auth + multi-tenant business | Done |
-| Categories / products / variants | Done |
-| Inventory + stock statuses | Done |
-| Customers | Done |
-| Orders + Kanban + COD | Done |
-| WhatsApp connect + webhook + bot | Done |
-| Dashboard + reports | Done |
-| Working hours | Done |
-| Users / RBAC | Done |
-| Product image upload | Done (local + S3-compatible) |
-
-## WhatsApp local testing
-
-1. Admin → **WhatsApp** → Connect (any test phone number ID + token)
-2. Keep `WHATSAPP_MOCK_SEND=true` in `.env`
-3. Use **Local simulator** (`hi` → browse → `checkout` → address → `confirm`)
-4. Replies appear in the API console as `[whatsapp:mock]`
-
-Production webhook setup: see [docs/DEPLOY.md](docs/DEPLOY.md).
-
-## Common scripts
-
-```bash
-pnpm dev                 # API + Web
-pnpm build               # production build
-pnpm db:seed             # demo data
-pnpm db:migrate:deploy   # apply migrations
-pnpm db:studio           # Prisma Studio
-```
-
-## Workspace
-
-```text
-apps/web            Admin UI
-apps/api            REST API + WhatsApp webhook/bot
-packages/shared     Shared types/schemas
-packages/database   Prisma schema, migrations, seed
-docs/DEPLOY.md      Deployment guide
-```
+More: [docs/DEPLOY.md](docs/DEPLOY.md)

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Start a local Redis suitable for Mashrum BullMQ (avoids broken Homebrew module paths).
+# Start a local Redis suitable for Mushroom BullMQ (avoids broken Homebrew module paths).
 set -euo pipefail
 
 REDIS_BIN="${REDIS_BIN:-/opt/homebrew/opt/redis/bin/redis-server}"
@@ -22,7 +22,7 @@ fi
   --bind 127.0.0.1 \
   --daemonize yes \
   --dir /tmp \
-  --dbfilename mashrum-redis.rdb \
+  --dbfilename mushroom-redis.rdb \
   --save ""
 
 sleep 0.5

@@ -1,0 +1,25 @@
+"use strict";
+
+module.exports = {
+  Business: require("./Business"),
+  User: require("./User"),
+  RefreshToken: require("./RefreshToken"),
+  WhatsAppAccount: require("./WhatsAppAccount"),
+  WhatsAppWebhookEvent: require("./WhatsAppWebhookEvent"),
+  WhatsAppMessage: require("./WhatsAppMessage"),
+  Category: require("./Category"),
+  Product: require("./Product"),
+  ProductVariant: require("./ProductVariant"),
+  Customer: require("./Customer"),
+  CustomerAddress: require("./CustomerAddress"),
+  Cart: require("./Cart"),
+  ConversationSession: require("./ConversationSession"),
+  Order: require("./Order"),
+  Inventory: require("./Inventory"),
+  InventoryMovement: require("./InventoryMovement"),
+  Payment: require("./Payment"),
+  MessageTemplate: require("./MessageTemplate"),
+  AutomationRule: require("./AutomationRule"),
+  Notification: require("./Notification"),
+  AuditLog: require("./AuditLog"),
+};

@@ -1,16 +1,18 @@
-node_modules
-dist
-.next
-.turbo
-coverage
+# Git
+node_modules/
+dist/
+coverage/
 *.log
+.DS_Store
+
+# Secrets (never commit)
 .env
 .env.local
 .env.*.local
-packages/database/.env
-apps/web/.env.local
-.DS_Store
-uploads
+backend/.env
+frontend/.env
+
+# Runtime
+uploads/
+backend/tmp/
 *.tsbuildinfo
-.prisma
-apps/api/tmp
